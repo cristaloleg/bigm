@@ -127,3 +127,13 @@ func Sub(x, y *Int) *Int {
 	}
 	return res
 }
+
+// Mul ...
+func Mul(x, y *Int) *Int {
+	res := New()
+	for i := range res.nums {
+		tmp := int64(x.nums[i] * y.nums[i])
+		res.nums[i] = int32(tmp % int64(Base[i]))
+	}
+	return res
+}
