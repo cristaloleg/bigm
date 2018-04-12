@@ -20,6 +20,7 @@ func init() {
 // Init ...
 func Init() {
 	Base = primesUpto1k
+	Base = primes1e9
 	BaseCount = len(Base)
 
 	BaseBig = make([]*big.Int, BaseCount)
@@ -44,9 +45,9 @@ func modInverse(a, m int32) int32 {
 	g, x, _ := gcdEx(a, m)
 	if g != 1 {
 		return 0
-		}
-	return (x%m + m) % m
 	}
+	return (x%m + m) % m
+}
 
 // gcdEx is an extended Euclid algorithm
 func gcdEx(a, b int32) (int32, int32, int32) {
@@ -57,7 +58,7 @@ func gcdEx(a, b int32) (int32, int32, int32) {
 		u0, u1 = u1, u0-q*u1
 		v0, v1 = v1, v0-q*v1
 		a, b = b, a%b
-}
+	}
 	return a, u0, v0
 }
 
@@ -70,6 +71,13 @@ type Int struct {
 func New() *Int {
 	ii := &Int{
 		nums: make([]int32, BaseCount),
+	}
+	return ii
+}
+
+func NewOf(nums *[]int32) *Int {
+	ii := &Int{
+		nums: *nums,
 	}
 	return ii
 }
@@ -133,6 +141,85 @@ func (ii *Int) IsInt64() bool {
 }
 
 // Add ...
+func (ii *Int) Add(x, y *Int) *Int {
+	batch := 8
+	i, n := 0, len(ii.nums)/batch
+	for ; i < n; i += batch {
+		// ii.nums[i+0] = fastMod((x.nums[i+0] + y.nums[i+0]), Base[i+0])
+		// ii.nums[i+1] = fastMod((x.nums[i+1] + y.nums[i+1]), Base[i+1])
+		// ii.nums[i+2] = fastMod((x.nums[i+2] + y.nums[i+2]), Base[i+2])
+		// ii.nums[i+3] = fastMod((x.nums[i+3] + y.nums[i+3]), Base[i+3])
+		// ii.nums[i+4] = fastMod((x.nums[i+4] + y.nums[i+4]), Base[i+4])
+		// ii.nums[i+5] = fastMod((x.nums[i+5] + y.nums[i+5]), Base[i+5])
+		// ii.nums[i+6] = fastMod((x.nums[i+6] + y.nums[i+6]), Base[i+6])
+		// ii.nums[i+7] = fastMod((x.nums[i+7] + y.nums[i+7]), Base[i+7])
+
+		ii.nums[i+0] = (x.nums[i+0] + y.nums[i+0]) % Base[i+0]
+		ii.nums[i+1] = (x.nums[i+1] + y.nums[i+1]) % Base[i+1]
+		ii.nums[i+2] = (x.nums[i+2] + y.nums[i+2]) % Base[i+2]
+		ii.nums[i+3] = (x.nums[i+3] + y.nums[i+3]) % Base[i+3]
+		ii.nums[i+4] = (x.nums[i+4] + y.nums[i+4]) % Base[i+4]
+		ii.nums[i+5] = (x.nums[i+5] + y.nums[i+5]) % Base[i+5]
+		ii.nums[i+6] = (x.nums[i+6] + y.nums[i+6]) % Base[i+6]
+		ii.nums[i+7] = (x.nums[i+7] + y.nums[i+7]) % Base[i+7]
+	}
+	for ; i < len(ii.nums); i++ {
+		// ii.nums[i] = fastMod((x.nums[i] + y.nums[i]), Base[i])
+		ii.nums[i] = (x.nums[i] + y.nums[i]) % Base[i]
+	}
+	return ii
+}
+
+// Mul ...
+func (ii *Int) Mul(x, y *Int) *Int {
+	// res := New()
+	// for i := range res.nums {
+	// 	tmp := int64(x.nums[i] * y.nums[i])
+	// 	res.nums[i] = int32(tmp % int64(Base[i]))
+	// }
+	// return res
+	i, n := 0, len(ii.nums)/8
+	for ; i < n; i += 8 {
+		tmp0 := int64(x.nums[i+0]) * int64(y.nums[i+0])
+		tmp1 := int64(x.nums[i+1]) * int64(y.nums[i+1])
+		tmp2 := int64(x.nums[i+2]) * int64(y.nums[i+2])
+		tmp3 := int64(x.nums[i+3]) * int64(y.nums[i+3])
+		tmp4 := int64(x.nums[i+4]) * int64(y.nums[i+4])
+		tmp5 := int64(x.nums[i+5]) * int64(y.nums[i+5])
+		tmp6 := int64(x.nums[i+6]) * int64(y.nums[i+6])
+		tmp7 := int64(x.nums[i+7]) * int64(y.nums[i+7])
+
+		ii.nums[i+0] = int32(tmp0 % int64(Base[i+0]))
+		ii.nums[i+1] = int32(tmp1 % int64(Base[i+1]))
+		ii.nums[i+2] = int32(tmp2 % int64(Base[i+2]))
+		ii.nums[i+3] = int32(tmp3 % int64(Base[i+3]))
+		ii.nums[i+4] = int32(tmp4 % int64(Base[i+4]))
+		ii.nums[i+5] = int32(tmp5 % int64(Base[i+5]))
+		ii.nums[i+6] = int32(tmp6 % int64(Base[i+6]))
+		ii.nums[i+7] = int32(tmp7 % int64(Base[i+7]))
+	}
+	for ; i < len(ii.nums); i++ {
+		tmp := int64(x.nums[i]) * int64(y.nums[i])
+		ii.nums[i] = int32(tmp % int64(Base[i]))
+	}
+	return ii
+}
+
+func fastMod(a, m int32) int32 {
+	if a > m {
+		a -= m
+	}
+	return a
+}
+
+func fastMod64(a, m int64) int64 {
+	if a > m {
+		a -= m
+	}
+	return a
+}
+
+// Add ...
 func Add(x, y *Int) *Int {
 	// res := New()
 	// for i := range res.nums {
@@ -140,8 +227,9 @@ func Add(x, y *Int) *Int {
 	// }
 	// return res
 	res := New()
-	i, n := 0, len(res.nums)/8
-	for ; i < n; i += 8 {
+	batch := 8
+	i, n := 0, len(res.nums)/batch
+	for ; i < n; i += batch {
 		res.nums[i+0] = (x.nums[i+0] + y.nums[i+0]) % Base[i+0]
 		res.nums[i+1] = (x.nums[i+1] + y.nums[i+1]) % Base[i+1]
 		res.nums[i+2] = (x.nums[i+2] + y.nums[i+2]) % Base[i+2]
@@ -165,8 +253,9 @@ func Sub(x, y *Int) *Int {
 	// }
 	// return res
 	res := New()
-	i, n := 0, len(res.nums)/8
-	for ; i < n; i += 8 {
+	batch := 8
+	i, n := 0, len(res.nums)/batch
+	for ; i < n; i += batch {
 		res.nums[i+0] = (x.nums[i+0] - y.nums[i+0] + Base[i+0]) % Base[i+0]
 		res.nums[i+1] = (x.nums[i+1] - y.nums[i+1] + Base[i+1]) % Base[i+1]
 		res.nums[i+2] = (x.nums[i+2] - y.nums[i+2] + Base[i+2]) % Base[i+2]
@@ -193,14 +282,15 @@ func Mul(x, y *Int) *Int {
 	res := New()
 	i, n := 0, len(res.nums)/8
 	for ; i < n; i += 8 {
-		tmp0 := int64(x.nums[i+0] * y.nums[i+0])
-		tmp1 := int64(x.nums[i+1] * y.nums[i+1])
-		tmp2 := int64(x.nums[i+2] * y.nums[i+2])
-		tmp3 := int64(x.nums[i+3] * y.nums[i+3])
-		tmp4 := int64(x.nums[i+4] * y.nums[i+4])
-		tmp5 := int64(x.nums[i+5] * y.nums[i+5])
-		tmp6 := int64(x.nums[i+6] * y.nums[i+6])
-		tmp7 := int64(x.nums[i+7] * y.nums[i+7])
+		tmp0 := int64(x.nums[i+0]) * int64(y.nums[i+0])
+		tmp1 := int64(x.nums[i+1]) * int64(y.nums[i+1])
+		tmp2 := int64(x.nums[i+2]) * int64(y.nums[i+2])
+		tmp3 := int64(x.nums[i+3]) * int64(y.nums[i+3])
+		tmp4 := int64(x.nums[i+4]) * int64(y.nums[i+4])
+		tmp5 := int64(x.nums[i+5]) * int64(y.nums[i+5])
+		tmp6 := int64(x.nums[i+6]) * int64(y.nums[i+6])
+		tmp7 := int64(x.nums[i+7]) * int64(y.nums[i+7])
+
 		res.nums[i+0] = int32(tmp0 % int64(Base[i+0]))
 		res.nums[i+1] = int32(tmp1 % int64(Base[i+1]))
 		res.nums[i+2] = int32(tmp2 % int64(Base[i+2]))
@@ -211,7 +301,7 @@ func Mul(x, y *Int) *Int {
 		res.nums[i+7] = int32(tmp7 % int64(Base[i+7]))
 	}
 	for ; i < len(res.nums); i++ {
-		tmp := int64(x.nums[i] * y.nums[i])
+		tmp := int64(x.nums[i]) * int64(y.nums[i])
 		res.nums[i] = int32(tmp % int64(Base[i]))
 	}
 	return res
