@@ -41,13 +41,24 @@ func Init() {
 }
 
 func modInverse(a, m int32) int32 {
-	a = a % m
-	for x := int64(1); x < int64(m); x++ {
-		if (int64(a)*x)%int64(m) == 1 {
-			return int32(x)
+	g, x, _ := gcdEx(a, m)
+	if g != 1 {
+		return 0
 		}
+	return (x%m + m) % m
 	}
-	return 0
+
+// gcdEx is an extended Euclid algorithm
+func gcdEx(a, b int32) (int32, int32, int32) {
+	u0, v0 := int32(1), int32(0)
+	u1, v1 := int32(0), int32(1)
+	for b != 0 {
+		q := a / b
+		u0, u1 = u1, u0-q*u1
+		v0, v1 = v1, v0-q*v1
+		a, b = b, a%b
+}
+	return a, u0, v0
 }
 
 // Int ...
