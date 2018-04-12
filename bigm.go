@@ -109,3 +109,21 @@ func (ii *Int) BigInt() *big.Int {
 	}
 	return res
 }
+
+// Add ...
+func Add(x, y *Int) *Int {
+	res := New()
+	for i := range res.nums {
+		res.nums[i] = (x.nums[i] + y.nums[i]) % Base[i]
+	}
+	return res
+}
+
+// Sub ...
+func Sub(x, y *Int) *Int {
+	res := New()
+	for i := range res.nums {
+		res.nums[i] = (x.nums[i] - y.nums[i] + Base[i]) % Base[i]
+	}
+	return res
+}
