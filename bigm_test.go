@@ -83,3 +83,46 @@ func TestMul(t *testing.T) {
 		})
 	}
 }
+func TestModInv(t *testing.T) {
+	tests := []struct {
+		x    string
+		y    string
+		want string
+	}{
+		{"44", "34", ""},
+		{"321", "123", ""},
+		{"3", "11", "4"},
+		{"3", "14", "5"},
+	}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("test %d", i), func(t *testing.T) {
+			xx := FromString(tt.x)
+			yy := FromString(tt.y)
+			if got := ModInv(xx, yy).String(); tt.want != got {
+				t.Errorf("ModInv() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsCoprime(t *testing.T) {
+	tests := []struct {
+		x    string
+		y    string
+		want bool
+	}{
+		{"44", "34", false},
+		{"321", "123", false},
+		{"3", "11", true},
+		{"3", "14", true},
+	}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("test %d", i), func(t *testing.T) {
+			xx := FromString(tt.x)
+			yy := FromString(tt.y)
+			if got := IsCoprime(xx, yy); tt.want != got {
+				t.Errorf("IsCoprime() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
