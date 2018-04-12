@@ -111,6 +111,16 @@ func (ii *Int) BigInt() *big.Int {
 	return res
 }
 
+// Int64 ...
+func (ii *Int) Int64() int64 {
+	return ii.BigInt().Int64()
+}
+
+// IsInt64 ...
+func (ii *Int) IsInt64() bool {
+	return ii.BigInt().IsInt64()
+}
+
 // Add ...
 func Add(x, y *Int) *Int {
 	// res := New()
