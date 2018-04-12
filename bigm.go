@@ -80,3 +80,32 @@ func FromBigInt(x *big.Int) *Int {
 	}
 	return res
 }
+
+// String ...
+func (ii *Int) String() string {
+	if ii == nil {
+		return ""
+	}
+	return ii.BigInt().String()
+}
+
+// BigInt ...
+func (ii *Int) BigInt() *big.Int {
+	res := big.NewInt(0)
+	mult := big.NewInt(1)
+
+	x := make([]int32, BaseCount)
+	for i := 0; i < BaseCount; i++ {
+		x[i] = ii.nums[i]
+
+		for j := 0; j < i; j++ {
+			tmp := int64(x[i]-x[j]) * int64(Reverse[j][i])
+			tmp2 := (tmp%int64(Base[i]) + int64(Base[i]))
+			x[i] = int32(tmp2) % Base[i]
+		}
+		tmp := big.NewInt(0).Mul(mult, big.NewInt(int64(x[i])))
+		res.Add(res, tmp)
+		mult.Mul(mult, BaseBig[i])
+	}
+	return res
+}
