@@ -9,9 +9,6 @@ git:
 matrix:
   fast_finish: true
 
-before_install:
-  - make install
-
 script:
   - diff -u <(echo -n) <(gofmt -d .)
   - go test -failfast ./...
