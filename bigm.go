@@ -113,8 +113,24 @@ func (ii *Int) BigInt() *big.Int {
 
 // Add ...
 func Add(x, y *Int) *Int {
+	// res := New()
+	// for i := range res.nums {
+	// 	res.nums[i] = (x.nums[i] + y.nums[i]) % Base[i]
+	// }
+	// return res
 	res := New()
-	for i := range res.nums {
+	i, n := 0, len(res.nums)/8
+	for ; i < n; i += 8 {
+		res.nums[i+0] = (x.nums[i+0] + y.nums[i+0]) % Base[i+0]
+		res.nums[i+1] = (x.nums[i+1] + y.nums[i+1]) % Base[i+1]
+		res.nums[i+2] = (x.nums[i+2] + y.nums[i+2]) % Base[i+2]
+		res.nums[i+3] = (x.nums[i+3] + y.nums[i+3]) % Base[i+3]
+		res.nums[i+4] = (x.nums[i+4] + y.nums[i+4]) % Base[i+4]
+		res.nums[i+5] = (x.nums[i+5] + y.nums[i+5]) % Base[i+5]
+		res.nums[i+6] = (x.nums[i+6] + y.nums[i+6]) % Base[i+6]
+		res.nums[i+7] = (x.nums[i+7] + y.nums[i+7]) % Base[i+7]
+	}
+	for ; i < len(res.nums); i++ {
 		res.nums[i] = (x.nums[i] + y.nums[i]) % Base[i]
 	}
 	return res
@@ -122,8 +138,24 @@ func Add(x, y *Int) *Int {
 
 // Sub ...
 func Sub(x, y *Int) *Int {
+	// res := New()
+	// for i := range res.nums {
+	// 	res.nums[i] = (x.nums[i] - y.nums[i] + Base[i]) % Base[i]
+	// }
+	// return res
 	res := New()
-	for i := range res.nums {
+	i, n := 0, len(res.nums)/8
+	for ; i < n; i += 8 {
+		res.nums[i+0] = (x.nums[i+0] - y.nums[i+0] + Base[i+0]) % Base[i+0]
+		res.nums[i+1] = (x.nums[i+1] - y.nums[i+1] + Base[i+1]) % Base[i+1]
+		res.nums[i+2] = (x.nums[i+2] - y.nums[i+2] + Base[i+2]) % Base[i+2]
+		res.nums[i+3] = (x.nums[i+3] - y.nums[i+3] + Base[i+3]) % Base[i+3]
+		res.nums[i+4] = (x.nums[i+4] - y.nums[i+4] + Base[i+4]) % Base[i+4]
+		res.nums[i+5] = (x.nums[i+5] - y.nums[i+5] + Base[i+5]) % Base[i+5]
+		res.nums[i+6] = (x.nums[i+6] - y.nums[i+6] + Base[i+6]) % Base[i+6]
+		res.nums[i+7] = (x.nums[i+7] - y.nums[i+7] + Base[i+7]) % Base[i+7]
+	}
+	for ; i < len(res.nums); i++ {
 		res.nums[i] = (x.nums[i] - y.nums[i] + Base[i]) % Base[i]
 	}
 	return res
@@ -131,8 +163,33 @@ func Sub(x, y *Int) *Int {
 
 // Mul ...
 func Mul(x, y *Int) *Int {
+	// res := New()
+	// for i := range res.nums {
+	// 	tmp := int64(x.nums[i] * y.nums[i])
+	// 	res.nums[i] = int32(tmp % int64(Base[i]))
+	// }
+	// return res
 	res := New()
-	for i := range res.nums {
+	i, n := 0, len(res.nums)/8
+	for ; i < n; i += 8 {
+		tmp0 := int64(x.nums[i+0] * y.nums[i+0])
+		tmp1 := int64(x.nums[i+1] * y.nums[i+1])
+		tmp2 := int64(x.nums[i+2] * y.nums[i+2])
+		tmp3 := int64(x.nums[i+3] * y.nums[i+3])
+		tmp4 := int64(x.nums[i+4] * y.nums[i+4])
+		tmp5 := int64(x.nums[i+5] * y.nums[i+5])
+		tmp6 := int64(x.nums[i+6] * y.nums[i+6])
+		tmp7 := int64(x.nums[i+7] * y.nums[i+7])
+		res.nums[i+0] = int32(tmp0 % int64(Base[i+0]))
+		res.nums[i+1] = int32(tmp1 % int64(Base[i+1]))
+		res.nums[i+2] = int32(tmp2 % int64(Base[i+2]))
+		res.nums[i+3] = int32(tmp3 % int64(Base[i+3]))
+		res.nums[i+4] = int32(tmp4 % int64(Base[i+4]))
+		res.nums[i+5] = int32(tmp5 % int64(Base[i+5]))
+		res.nums[i+6] = int32(tmp6 % int64(Base[i+6]))
+		res.nums[i+7] = int32(tmp7 % int64(Base[i+7]))
+	}
+	for ; i < len(res.nums); i++ {
 		tmp := int64(x.nums[i] * y.nums[i])
 		res.nums[i] = int32(tmp % int64(Base[i]))
 	}
