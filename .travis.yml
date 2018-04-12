@@ -1,0 +1,22 @@
+language: go
+
+go:
+  - 1.x
+
+git:
+  depth: 3
+
+matrix:
+  fast_finish: true
+
+before_install:
+  - make install
+
+script:
+  - diff -u <(echo -n) <(gofmt -d .)
+  - go test -failfast ./...
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
