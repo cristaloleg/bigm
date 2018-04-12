@@ -19,6 +19,7 @@ func init() {
 
 // Init ...
 func Init() {
+	Base = primesUpto1k
 	BaseCount = len(Base)
 
 	BaseBig = make([]*big.Int, BaseCount)
