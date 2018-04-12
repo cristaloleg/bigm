@@ -138,6 +138,18 @@ func Mul(x, y *Int) *Int {
 	return res
 }
 
+// ModInv ...
+func ModInv(x, y *Int) *Int {
+	xx := x.BigInt()
+	yy := y.BigInt()
+	tmp2 := big.NewInt(0).GCD(nil, nil, xx, yy)
+	if tmp2.Cmp(bigOne) != 0 {
+		return nil
+	}
+	tmp := big.NewInt(0).ModInverse(xx, yy)
+	return FromBigInt(tmp)
+}
+
 // IsEqual ...
 func IsEqual(x, y *Int) bool {
 	for i := range x.nums {
