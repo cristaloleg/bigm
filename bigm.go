@@ -137,3 +137,21 @@ func Mul(x, y *Int) *Int {
 	}
 	return res
 }
+
+// IsEqual ...
+func IsEqual(x, y *Int) bool {
+	for i := range x.nums {
+		if x.nums[i] != y.nums[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// IsCoprime ...
+func IsCoprime(x, y *Int) bool {
+	xx := x.BigInt()
+	yy := y.BigInt()
+	tmp2 := big.NewInt(0).GCD(nil, nil, xx, yy)
+	return tmp2.Cmp(bigOne) == 0
+}
